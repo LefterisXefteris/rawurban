@@ -13,6 +13,7 @@ type Product = {
   id: string;
   title: string;
   handle: string;
+  description?: string;
   priceRange: {
     minVariantPrice: {
       amount: string;
@@ -23,6 +24,23 @@ type Product = {
     url: string;
     altText: string | null;
   } | null;
+  variants: {
+    edges: {
+      node: {
+        id: string;
+        title: string;
+        quantityAvailable: number;
+        image: {
+          url: string;
+          altText: string | null;
+        } | null;
+        price: {
+          amount: string;
+          currencyCode: string;
+        };
+      };
+    }[];
+  };
 };
 
 type ProductsQuery = {
@@ -72,7 +90,7 @@ export async function getProducts(first = 10): Promise<Product[]> {
               featuredImage {
                 url
                 altText
-              }
+              } 
             }
           }
         }
@@ -96,12 +114,20 @@ export async function getProductByHandle(handle: string): Promise<Product | null
           id
           title
           description
+          featuredImage {
+            url
+            altText
+          }
           variants(first: 3) {
             edges {
               node {
                 id
                 title
                 quantityAvailable
+                image {
+                  url
+                  altText
+                }
                 price {
                   amount
                   currencyCode
@@ -121,3 +147,4 @@ export async function getProductByHandle(handle: string): Promise<Product | null
 
   return data.product;
 }
+

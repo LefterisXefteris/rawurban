@@ -1,0 +1,2 @@
+import { shopifyFetch } from './index';
+
