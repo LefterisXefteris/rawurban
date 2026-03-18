@@ -1,7 +1,7 @@
 export const Logo = () => {
   return (
     <div>
-        <a className="text-2xl font-bold stacked-fractions">R4/W</a>
+      <a className="text-xl font-black tracking-tighter uppercase whitespace-nowrap">TWO STONES</a>
     </div>
 
   );

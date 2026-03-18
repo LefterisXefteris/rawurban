@@ -1,6 +1,16 @@
 import { ProductDetail } from "@/components/ProductDetail";
+import { Navbar } from "@/components/navbar/page";
 
-export default async function ProductPage({ params }: { params: Promise<{ handle: string }> }) {
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ handle: string }>;
+}) {
   const { handle } = await params;
-  return <ProductDetail handle={handle} />;
+  return (
+    <>
+      <Navbar />
+      <ProductDetail handle={handle} />
+    </>
+  );
 }

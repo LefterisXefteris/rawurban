@@ -10,15 +10,23 @@
   },
   "dependencies": {
     "@apollo/server": "^5.2.0",
+    "@radix-ui/react-separator": "^1.1.8",
+    "@radix-ui/react-slot": "^1.2.4",
     "@shopify/shopify-api": "^12.2.0",
     "@shopify/storefront-api-client": "^1.0.9",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.29.2",
     "graphql": "^16.12.0",
+    "lucide-react": "^0.563.0",
     "next": "16.0.10",
     "postcss": "^8.5.6",
     "react": "19.2.1",
-    "react-dom": "19.2.1"
+    "react-dom": "19.2.1",
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
+    "@next/swc-darwin-arm64": "^16.1.7",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/node": "^20",
     "@types/react": "^19",

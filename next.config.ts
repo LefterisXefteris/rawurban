@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
         hostname: 'cdn.shopify.com',
       },
     ],
+    formats: ['image/avif', 'image/webp'],
+    minimumCacheTTL: 60 * 60 * 24, // 24 h
   },
 };
 

@@ -24,6 +24,14 @@ type Product = {
     url: string;
     altText: string | null;
   } | null;
+  images: {
+    edges: {
+      node: {
+        url: string;
+        altText: string | null;
+      };
+    }[];
+  };
   variants: {
     edges: {
       node: {
@@ -100,10 +108,68 @@ export async function getProducts(first = 10): Promise<Product[]> {
   );
 
   if (errors) {
-    throw new Error(errors[0].message);
+    console.error("Shopify errors:", JSON.stringify(errors, null, 2));
+    throw new Error(errors[0].message || "Unknown Shopify error");
   }
 
   return data.products.edges.map((e) => e.node);
+}
+
+export type { Product };
+
+type CollectionQuery = {
+  collection: {
+    title: string;
+    description: string;
+    products: {
+      edges: { node: Product }[];
+    };
+  } | null;
+};
+
+export async function getCollection(
+  handle: string,
+  first = 48
+): Promise<{ title: string; description: string; products: Product[] } | null> {
+  const { data, errors } = await shopifyFetch<CollectionQuery>(
+    `
+      query getCollection($handle: String!, $first: Int!) {
+        collection(handle: $handle) {
+          title
+          description
+          products(first: $first) {
+            edges {
+              node {
+                id
+                title
+                handle
+                priceRange {
+                  minVariantPrice {
+                    amount
+                    currencyCode
+                  }
+                }
+                featuredImage {
+                  url
+                  altText
+                }
+              }
+            }
+          }
+        }
+      }
+    `,
+    { handle, first }
+  );
+
+  if (errors) throw new Error(errors[0].message);
+  if (!data.collection) return null;
+
+  return {
+    title: data.collection.title,
+    description: data.collection.description,
+    products: data.collection.products.edges.map((e) => e.node),
+  };
 }
 
 export async function getProductByHandle(handle: string): Promise<Product | null> {
@@ -118,6 +184,14 @@ export async function getProductByHandle(handle: string): Promise<Product | null
             url
             altText
           }
+          images(first: 10) {
+            edges {
+              node {
+                url
+                altText
+              }
+            }
+          }
           variants(first: 3) {
             edges {
               node {
@@ -130,7 +204,7 @@ export async function getProductByHandle(handle: string): Promise<Product | null
                 }
                 price {
                   amount
-                  currencyCode
+                  currencyCode  
                 }
               }
             }
