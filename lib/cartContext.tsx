@@ -107,6 +107,21 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  // ── Remove item implementation ────────────────────────────────────────────
+  // Deps: setLoading and setCart are React state setters (stable by React guarantee).
+  // removeFromCart is a module-level import (stable). Empty array is correct.
+  const removeItemImpl = useCallback(async (cartId: string, lineId: string) => {
+    setLoading(true);
+    try {
+      const updated = await removeFromCart(cartId, [lineId]);
+      setCart(updated);
+    } catch (err) {
+      console.error("[Cart] removeItem error:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   // ── Update quantity ───────────────────────────────────────────────────────
   const updateItem = useCallback(async (lineId: string, quantity: number) => {
     const cartId = localStorage.getItem("cartId");
@@ -126,26 +141,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [removeItemImpl]);
 
   // ── Remove item ───────────────────────────────────────────────────────────
-  async function removeItemImpl(cartId: string, lineId: string) {
-    setLoading(true);
-    try {
-      const updated = await removeFromCart(cartId, [lineId]);
-      setCart(updated);
-    } catch (err) {
-      console.error("[Cart] removeItem error:", err);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   const removeItem = useCallback(async (lineId: string) => {
     const cartId = localStorage.getItem("cartId");
     if (!cartId) return;
     await removeItemImpl(cartId, lineId);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [removeItemImpl]);
 
   return (
     <CartContext.Provider
@@ -158,6 +161,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
 export function useCart() {
   const ctx = useContext(CartContext);
-  if (!ctx) throw new Error("useCart must be used inside <CartProvider>");
+  if (!ctx) {
+    // Return a no-op during SSR before CartProvider hydrates
+    return {
+      cart: null,
+      cartOpen: false,
+      setCartOpen: () => {},
+      addItem: async () => {},
+      updateItem: async () => {},
+      removeItem: async () => {},
+      loading: false,
+      hydrating: true,
+    } satisfies CartContextType;
+  }
   return ctx;
 }
