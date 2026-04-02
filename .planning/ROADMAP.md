@@ -20,9 +20,11 @@
 6. `lib/query.ts` is deleted
 7. Only `pnpm-lock.yaml` exists; `package-lock.json` is gone
 
-**Plans:**
-1. Remove unused deps + standardize lockfile + extract API version + add env validation
-2. Fix "use server" misuse + extract price formatter + delete empty file + fix useCallback
+**Plans:** 2 plans
+
+Plans:
+- [ ] 01-01-PLAN.md — Remove unused deps + establish pnpm lockfile + env guard + API version constant
+- [ ] 01-02-PLAN.md — Fix "use server" misuse + extract formatPrice + delete empty file + fix useCallback
 
 ---
 
