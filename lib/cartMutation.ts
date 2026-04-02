@@ -1,5 +1,3 @@
-"use server";
-
 import { shopifyFetch } from './index';
 
 /**
@@ -18,6 +16,7 @@ export type CartLine = {
   merchandise: {
     id: string;
     title: string; // variant title (e.g. "M / Black")
+    selectedOptions: { name: string; value: string }[];
     product: { title: string }; // actual product name
     image?: {
       url: string;
@@ -74,6 +73,7 @@ export async function createCart(lines: Array<{ merchandiseId: string; quantity:
                   ... on ProductVariant {
                     id
                     title
+                    selectedOptions { name value }
                     product { title }
                     image {
                       url
@@ -176,6 +176,7 @@ export async function addToCart(cartId: string, lines: Array<{ merchandiseId: st
                   ... on ProductVariant {
                     id
                     title
+                    selectedOptions { name value }
                     product { title }
                     image {
                       url
@@ -231,6 +232,7 @@ export async function updateCart(cartId: string, lines: Array<{ id: string; quan
                   ... on ProductVariant {
                     id
                     title
+                    selectedOptions { name value }
                     product { title }
                     image {
                       url
@@ -286,6 +288,7 @@ export async function removeFromCart(cartId: string, lineIds: string[]) {
                   ... on ProductVariant {
                     id
                     title
+                    selectedOptions { name value }
                     product { title }
                     image {
                       url

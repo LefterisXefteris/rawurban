@@ -1,11 +1,9 @@
 import { Navbar } from "@/components/navbar/page";
 import { getProducts } from "@/lib/index";
 import { Hero } from "@/components/hero";
+import { formatPrice } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
-
-const fmt = (amount: string) =>
-  `$${parseFloat(amount).toFixed(2)}`;
 
 export default async function Home() {
   const products = await getProducts(12);
@@ -40,7 +38,7 @@ export default async function Home() {
               />
             )}
             {/* Gradient overlay — heavier at bottom for legibility */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
             <div className="relative z-10 text-white">
               <p className="text-[10px] uppercase tracking-[0.45em] mb-3 text-white/60">
                 Just Dropped
@@ -89,7 +87,7 @@ export default async function Home() {
         <div className="bg-black py-4 overflow-hidden border-y border-zinc-900">
           <div className="flex whitespace-nowrap animate-marquee w-max">
             {Array(6)
-              .fill("NEW ARRIVALS · FREE SHIPPING OVER $75 · PREMIUM QUALITY · ")
+              .fill("NEW ARRIVALS · FREE SHIPPING OVER £75 · PREMIUM QUALITY · ")
               .map((t, i) => (
                 <span
                   key={i}
@@ -156,7 +154,7 @@ export default async function Home() {
                       {product.title}
                     </h3>
                     <p className="text-[11px] font-semibold text-black">
-                      {fmt(product.priceRange.minVariantPrice.amount)}
+                      {formatPrice(product.priceRange.minVariantPrice.amount)}
                     </p>
                   </div>
                 </Link>

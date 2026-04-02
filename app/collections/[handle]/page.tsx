@@ -1,10 +1,9 @@
 import { getCollection } from "@/lib/index";
 import { Navbar } from "@/components/navbar/page";
+import { formatPrice } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
-const fmt = (amount: string) => `$${parseFloat(amount).toFixed(2)}`;
 
 export default async function CollectionPage({
   params,
@@ -92,7 +91,7 @@ export default async function CollectionPage({
                       {product.title}
                     </h3>
                     <p className="text-[11px] font-semibold text-black">
-                      {fmt(product.priceRange.minVariantPrice.amount)}
+                      {formatPrice(product.priceRange.minVariantPrice.amount)}
                     </p>
                   </div>
                 </Link>
