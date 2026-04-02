@@ -7,18 +7,18 @@
 
 ### Security & Dependencies
 
-- [ ] **SEC-01**: App fails fast with a descriptive error if SHOPIFY_STORE_DOMAIN or STOREFRONT_ACCESS_TOKEN env vars are missing at startup
-- [ ] **SEC-02**: Shopify API version extracted to a named constant (not hardcoded inline)
-- [ ] **DEP-01**: @apollo/server removed from production dependencies
-- [ ] **DEP-02**: @shopify/shopify-api removed from production dependencies
-- [ ] **DEP-03**: package-lock.json removed; pnpm established as sole package manager
+- [x] **SEC-01**: App fails fast with a descriptive error if SHOPIFY_STORE_DOMAIN or STOREFRONT_ACCESS_TOKEN env vars are missing at startup
+- [x] **SEC-02**: Shopify API version extracted to a named constant (not hardcoded inline)
+- [x] **DEP-01**: @apollo/server removed from production dependencies
+- [x] **DEP-02**: @shopify/shopify-api removed from production dependencies
+- [x] **DEP-03**: package-lock.json removed; pnpm established as sole package manager
 
 ### Code Quality
 
-- [ ] **QUAL-01**: "use server" directive removed from lib/cartMutation.ts; file works as a shared utility
-- [ ] **QUAL-02**: Price formatter extracted to lib/utils.ts and imported by app/page.tsx and app/collections/[handle]/page.tsx
-- [ ] **QUAL-03**: Empty lib/query.ts file deleted
-- [ ] **QUAL-04**: cartContext.tsx ESLint suppressions replaced with proper useCallback dependencies
+- [x] **QUAL-01**: "use server" directive removed from lib/cartMutation.ts; file works as a shared utility
+- [x] **QUAL-02**: Price formatter extracted to lib/utils.ts and imported by app/page.tsx and app/collections/[handle]/page.tsx
+- [x] **QUAL-03**: Empty lib/query.ts file deleted
+- [x] **QUAL-04**: cartContext.tsx ESLint suppressions replaced with proper useCallback dependencies
 
 ### Bug Fixes
 
@@ -78,15 +78,15 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SEC-01 | Phase 1 | Pending |
-| SEC-02 | Phase 1 | Pending |
-| DEP-01 | Phase 1 | Pending |
-| DEP-02 | Phase 1 | Pending |
-| DEP-03 | Phase 1 | Pending |
-| QUAL-01 | Phase 1 | Pending |
-| QUAL-02 | Phase 1 | Pending |
-| QUAL-03 | Phase 1 | Pending |
-| QUAL-04 | Phase 1 | Pending |
+| SEC-01 | Phase 1 | Complete |
+| SEC-02 | Phase 1 | Complete |
+| DEP-01 | Phase 1 | Complete |
+| DEP-02 | Phase 1 | Complete |
+| DEP-03 | Phase 1 | Complete |
+| QUAL-01 | Phase 1 | Complete |
+| QUAL-02 | Phase 1 | Complete |
+| QUAL-03 | Phase 1 | Complete |
+| QUAL-04 | Phase 1 | Complete |
 | BUG-01 | Phase 2 | Pending |
 | BUG-02 | Phase 2 | Pending |
 | BUG-03 | Phase 2 | Pending |

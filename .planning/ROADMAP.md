@@ -23,8 +23,8 @@
 **Plans:** 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Remove unused deps + establish pnpm lockfile + env guard + API version constant
-- [ ] 01-02-PLAN.md — Fix "use server" misuse + extract formatPrice + delete empty file + fix useCallback
+- [x] 01-01-PLAN.md — Remove unused deps + establish pnpm lockfile + env guard + API version constant
+- [x] 01-02-PLAN.md — Fix "use server" misuse + extract formatPrice + delete empty file + fix useCallback
 
 ---
 
