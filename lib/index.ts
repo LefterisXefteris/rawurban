@@ -3,6 +3,19 @@
 const domain = process.env.SHOPIFY_STORE_DOMAIN;
 const token = process.env.STOREFRONT_ACCESS_TOKEN;
 
+if (!domain) {
+  throw new Error(
+    "[Shopify] SHOPIFY_STORE_DOMAIN is not set. Add it to .env.local."
+  );
+}
+if (!token) {
+  throw new Error(
+    "[Shopify] STOREFRONT_ACCESS_TOKEN is not set. Add it to .env.local."
+  );
+}
+
+const SHOPIFY_API_VERSION = "2024-01";
+
 // Types
 type ShopifyResponse<T> = {
   data: T;
@@ -32,12 +45,17 @@ type Product = {
       };
     }[];
   };
+  options?: {
+    name: string;
+    values: string[];
+  }[];
   variants: {
     edges: {
       node: {
         id: string;
         title: string;
         quantityAvailable: number;
+        selectedOptions: { name: string; value: string }[];
         image: {
           url: string;
           altText: string | null;
@@ -66,11 +84,11 @@ export async function shopifyFetch<T>(
   query: string,
   variables: Record<string, unknown> = {}
 ): Promise<ShopifyResponse<T>> {
-  const response = await fetch(`https://${domain}/api/2024-01/graphql.json`, {
+  const response = await fetch(`https://${domain}/api/${SHOPIFY_API_VERSION}/graphql.json`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-Shopify-Storefront-Access-Token': token!,
+      'X-Shopify-Storefront-Access-Token': token as string,
     },
     body: JSON.stringify({ query, variables }),
   });
@@ -192,19 +210,27 @@ export async function getProductByHandle(handle: string): Promise<Product | null
               }
             }
           }
-          variants(first: 3) {
+          options {
+            name
+            values
+          }
+          variants(first: 100) {
             edges {
               node {
                 id
                 title
                 quantityAvailable
+                selectedOptions {
+                  name
+                  value
+                }
                 image {
                   url
                   altText
                 }
                 price {
                   amount
-                  currencyCode  
+                  currencyCode
                 }
               }
             }
