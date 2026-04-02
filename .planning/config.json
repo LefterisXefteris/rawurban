@@ -1,0 +1,6 @@
+{
+  "mode": "yolo",
+  "depth": "quick",
+  "parallelization": "parallel",
+  "created": "2026-04-02"
+}
