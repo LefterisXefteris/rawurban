@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Cart } from "../Cart";
+import { SearchBar } from "./SearchBar";
 import { Menu, Search, X, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -31,6 +32,8 @@ const navLinks = [
 export function Navbar() {
   const [scrolled,       setScrolled]       = useState(false);
   const [mobileOpen,     setMobileOpen]     = useState(false);
+  const [searchOpen,     setSearchOpen]     = useState(false);
+  const [searchPath,     setSearchPath]     = useState("");
   const [announcementIdx, setAnnouncementIdx] = useState(0);
   const { scrollY } = useScroll();
   const pathname = usePathname();
@@ -42,6 +45,7 @@ export function Navbar() {
   // When scrolled the bar is solid black → always use white.
   // When transparent, colour depends on what's behind.
   const useDarkText = !scrolled && !heroIsDark;
+  const searchVisible = searchOpen && searchPath === pathname && !mobileOpen;
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrolled(latest > 80);
@@ -84,72 +88,96 @@ export function Navbar() {
         >
           {/* Colour context — all child icons inherit currentColor */}
           <div
-            className={cn(
-              "max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12 flex items-center justify-between transition-colors duration-300",
-              useDarkText ? "text-black" : "text-white"
-            )}
+            className="relative max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12"
           >
-            {/* Mobile hamburger */}
-            <button
-              className="lg:hidden p-2 -ml-2 hover:opacity-60 transition-opacity"
-              onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label="Toggle menu"
+            <div
+              className={cn(
+                "flex items-center justify-between transition-colors duration-300",
+                useDarkText ? "text-black" : "text-white"
+              )}
             >
-              {mobileOpen
-                ? <X    className="h-5 w-5" />
-                : <Menu className="h-5 w-5" />}
-            </button>
+              {/* Mobile hamburger */}
+              <button
+                className="lg:hidden p-2 -ml-2 hover:opacity-60 transition-opacity"
+                onClick={() => {
+                  setSearchOpen(false);
+                  setMobileOpen((open) => !open);
+                }}
+                aria-label="Toggle menu"
+              >
+                {mobileOpen
+                  ? <X    className="h-5 w-5" />
+                  : <Menu className="h-5 w-5" />}
+              </button>
 
-            {/* Logo */}
-            <Link
-              href="/"
-              className="font-serif italic text-2xl shrink-0 hover:opacity-70 transition-opacity tracking-wide"
-            >
-              Two Stones
-            </Link>
+              {/* Logo */}
+              <Link
+                href="/"
+                className="font-serif italic text-2xl shrink-0 hover:opacity-70 transition-opacity tracking-wide"
+              >
+                Two Stones
+              </Link>
 
-            {/* Desktop nav — centred absolutely */}
-            <nav className="hidden lg:flex items-center gap-10 absolute left-1/2 -translate-x-1/2">
-              {navLinks.map(({ label, href, hot }) => (
-                <Link
-                  key={label}
-                  href={href}
-                  className="relative text-[12px] font-semibold uppercase tracking-[0.2em] hover:opacity-60 transition-opacity group"
-                >
-                  {label}
-                  {hot && (
-                    <span className="absolute -top-2 -right-4 text-[8px] font-black text-red-400 tracking-normal">
-                      HOT
-                    </span>
-                  )}
-                  {/* Underline matches icon colour */}
-                  <span
-                    className={cn(
-                      "absolute -bottom-1 left-0 w-0 h-px group-hover:w-full transition-all duration-300",
-                      useDarkText ? "bg-black" : "bg-white"
+              {/* Desktop nav — centred absolutely */}
+              <nav className="hidden lg:flex items-center gap-10 absolute left-1/2 -translate-x-1/2">
+                {navLinks.map(({ label, href, hot }) => (
+                  <Link
+                    key={label}
+                    href={href}
+                    className="relative text-[12px] font-semibold uppercase tracking-[0.2em] hover:opacity-60 transition-opacity group"
+                  >
+                    {label}
+                    {hot && (
+                      <span className="absolute -top-2 -right-4 text-[8px] font-black text-red-400 tracking-normal">
+                        HOT
+                      </span>
                     )}
-                  />
-                </Link>
-              ))}
-            </nav>
+                    {/* Underline matches icon colour */}
+                    <span
+                      className={cn(
+                        "absolute -bottom-1 left-0 w-0 h-px group-hover:w-full transition-all duration-300",
+                        useDarkText ? "bg-black" : "bg-white"
+                      )}
+                    />
+                  </Link>
+                ))}
+              </nav>
 
-            {/* Right icons */}
-            <div className="flex items-center gap-1">
-              <button
-                className="p-2 hover:opacity-60 transition-opacity hidden md:block"
-                aria-label="Search"
-              >
-                <Search className="h-[18px] w-[18px]" />
-              </button>
-              <button
-                className="p-2 hover:opacity-60 transition-opacity hidden md:block"
-                aria-label="Account"
-              >
-                <User className="h-[18px] w-[18px]" />
-              </button>
-              {/* Pass isDark so the cart badge flips colour too */}
-              <Cart isDark={!useDarkText} />
+              {/* Right icons */}
+              <div className="flex items-center gap-1">
+                <button
+                  className="hidden p-2 transition-opacity hover:opacity-60 md:block"
+                  aria-label="Search"
+                  aria-expanded={searchVisible}
+                  aria-controls="navbar-search-overlay"
+                  onClick={() => {
+                    if (searchVisible) {
+                      setSearchOpen(false);
+                      return;
+                    }
+
+                    setSearchPath(pathname);
+                    setSearchOpen(true);
+                  }}
+                >
+                  <Search className="h-[18px] w-[18px]" />
+                </button>
+                <button
+                  className="p-2 hover:opacity-60 transition-opacity hidden md:block"
+                  aria-label="Account"
+                >
+                  <User className="h-[18px] w-[18px]" />
+                </button>
+                {/* Pass isDark so the cart badge flips colour too */}
+                <Cart isDark={!useDarkText} />
+              </div>
             </div>
+
+            <SearchBar
+              open={searchVisible}
+              onClose={() => setSearchOpen(false)}
+              useDarkText={useDarkText}
+            />
           </div>
 
           {/* ── Mobile slide-down menu (always on black bg) ────────────── */}
