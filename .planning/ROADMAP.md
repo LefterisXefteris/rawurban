@@ -42,9 +42,11 @@ Plans:
 5. Privacy Policy and Terms of Service in the footer navigate somewhere (link, not span)
 6. Clicking the navbar search icon opens the SearchBar input
 
-**Plans:**
-1. Quick Add functionality + SearchBar wire-up
-2. Description accordion + Size Guide modal + newsletter success + privacy/terms links
+**Plans:** 2 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Product-card Quick Add + footer newsletter success + legal link destinations
+- [ ] 02-02-PLAN.md — Product-page description/modal interactions + navbar search overlay
 
 ---
 
