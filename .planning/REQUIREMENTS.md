@@ -22,12 +22,12 @@
 
 ### Bug Fixes
 
-- [ ] **BUG-01**: Quick Add button on product cards adds the first/default variant to cart
-- [ ] **BUG-02**: Description accordion on product page toggles open/closed (expanded by default)
-- [ ] **BUG-03**: Size Guide button opens a modal with a generic size chart
-- [ ] **BUG-04**: Newsletter form shows a success message on submit (no page reload)
-- [ ] **BUG-05**: Privacy Policy and Terms of Service render as clickable links
-- [ ] **BUG-06**: Navbar search button opens the SearchBar component
+- [x] **BUG-01**: Quick Add button on product cards adds the first/default variant to cart
+- [x] **BUG-02**: Description accordion on product page toggles open/closed (expanded by default)
+- [x] **BUG-03**: Size Guide button opens a modal with a generic size chart
+- [x] **BUG-04**: Newsletter form shows a success message on submit (no page reload)
+- [x] **BUG-05**: Privacy Policy and Terms of Service render as clickable links
+- [x] **BUG-06**: Navbar search button opens the SearchBar component
 
 ### Content & Navigation
 
@@ -87,12 +87,12 @@
 | QUAL-02 | Phase 1 | Complete |
 | QUAL-03 | Phase 1 | Complete |
 | QUAL-04 | Phase 1 | Complete |
-| BUG-01 | Phase 2 | Pending |
-| BUG-02 | Phase 2 | Pending |
-| BUG-03 | Phase 2 | Pending |
-| BUG-04 | Phase 2 | Pending |
-| BUG-05 | Phase 2 | Pending |
-| BUG-06 | Phase 2 | Pending |
+| BUG-01 | Phase 2 | Complete |
+| BUG-02 | Phase 2 | Complete |
+| BUG-03 | Phase 2 | Complete |
+| BUG-04 | Phase 2 | Complete |
+| BUG-05 | Phase 2 | Complete |
+| BUG-06 | Phase 2 | Complete |
 | NAV-01 | Phase 3 | Pending |
 | NAV-02 | Phase 3 | Pending |
 | UX-01 | Phase 4 | Pending |

@@ -45,7 +45,7 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Product-card Quick Add + footer newsletter success + legal link destinations
+- [x] 02-01-PLAN.md — Product-card Quick Add + footer newsletter success + legal link destinations
 - [ ] 02-02-PLAN.md — Product-page description/modal interactions + navbar search overlay
 
 ---
