@@ -456,12 +456,10 @@ export function SearchOverlay({
 | A1 | BUG-05 should be planned to avoid 404 destinations, not merely to replace spans with clickable links. [ASSUMED] | Summary, Common Pitfalls, Open Questions | If the user only expects clickable text, the plan could add unnecessary route work. If the user expects valid destinations and the plan ignores it, BUG-05 will ship half-fixed. |
 | A2 | A small client `ProductCard` extraction is acceptable in this phase even though the roadmap names work by feature rather than by component refactor. [ASSUMED] | Architecture Patterns | If the team wants zero structural reshaping, the plan must duplicate Quick Add logic across two pages instead. |
 
-## Open Questions
+## Open Questions (Resolved)
 
 1. **What should Privacy Policy and Terms of Service point to in Phase 2?** [VERIFIED: codebase grep]
-   What we know: The footer currently renders them as non-link spans, and no privacy/terms/legal routes exist under `app/`. [VERIFIED: codebase grep]
-   What's unclear: Whether BUG-05 is satisfied by clickable placeholders or requires real destinations in this same phase. [ASSUMED]
-   Recommendation: Lock this before planning. If the answer is "real destination," add minimal policy pages in Phase 2 so the links do not 404. [ASSUMED]
+   **Resolution:** Phase 2 planning locked this to real internal routes (`/privacy-policy` and `/terms-of-service`) with concrete page files in Plan 01, so BUG-05 ships with non-404 destinations. [VERIFIED: .planning/phases/02-bug-fixes/02-01-PLAN.md]
 
 ## Environment Availability
 

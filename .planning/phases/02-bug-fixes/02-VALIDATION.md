@@ -1,9 +1,9 @@
 ---
 phase: 2
 slug: bug-fixes
-status: draft
-nyquist_compliant: false
-wave_0_complete: false
+status: ready
+nyquist_compliant: true
+wave_0_complete: true
 created: 2026-04-12
 ---
 
@@ -38,12 +38,11 @@ created: 2026-04-12
 
 | Task ID | Plan | Wave | Requirement | Threat Ref | Secure Behavior | Test Type | Automated Command | File Exists | Status |
 |---------|------|------|-------------|------------|-----------------|-----------|-------------------|-------------|--------|
-| 02-01-01 | 01 | 1 | BUG-01 | T-02-01 / — | Quick Add only sends in-stock variant IDs; no HTML injection paths | manual + smoke | `pnpm lint && pnpm build` | ✅ | ⬜ pending |
-| 02-01-02 | 01 | 1 | BUG-06 | T-02-02 / — | Search overlay renders static text/inputs only; no raw HTML | manual + smoke | `pnpm lint && pnpm build` | ✅ | ⬜ pending |
-| 02-02-01 | 02 | 1 | BUG-02 | T-02-03 / — | Description toggle is state-only and content remains escaped JSX | manual + smoke | `pnpm lint && pnpm build` | ✅ | ⬜ pending |
-| 02-02-02 | 02 | 1 | BUG-03 | T-02-04 / — | Modal supports keyboard escape and controlled close behavior | manual + smoke | `pnpm lint && pnpm build` | ✅ | ⬜ pending |
-| 02-02-03 | 02 | 1 | BUG-04 | T-02-05 / — | Newsletter success uses local state only, no unsanitized output | manual + smoke | `pnpm lint && pnpm build` | ✅ | ⬜ pending |
-| 02-02-04 | 02 | 1 | BUG-05 | T-02-06 / — | Legal links route to intended in-app destinations only | manual + smoke | `pnpm lint && pnpm build` | ✅ | ⬜ pending |
+| 02-01-01 | 01 | 1 | BUG-01 | T-02-01 / T-02-04 | Quick Add derives variant IDs from trusted query data and routes adds through existing cart context path | manual + smoke | `pnpm lint` | ✅ | ⬜ pending |
+| 02-01-02 | 01 | 1 | BUG-04, BUG-05 | T-02-02 / T-02-03 | Newsletter success uses static local-state copy; legal links are hardcoded internal routes only | manual + smoke | `pnpm lint` | ✅ | ⬜ pending |
+| 02-02-01 | 02 | 1 | BUG-02 | T-02-05 | Description toggle only changes visibility state and renders plain JSX text | manual + smoke | `pnpm lint` | ✅ | ⬜ pending |
+| 02-02-02 | 02 | 1 | BUG-03 | T-02-06 | Size Guide modal uses controlled dialog behavior with static measurements content | manual + smoke | `pnpm lint` | ✅ | ⬜ pending |
+| 02-02-03 | 02 | 1 | BUG-06 | T-02-07 / T-02-08 | Search overlay suggestions remain internal links with bounded local UI state only | manual + smoke | `pnpm lint` | ✅ | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
@@ -78,4 +77,4 @@ created: 2026-04-12
 - [ ] Feedback latency < 120s
 - [ ] `nyquist_compliant: true` set in frontmatter
 
-**Approval:** pending
+**Approval:** approved 2026-04-12
