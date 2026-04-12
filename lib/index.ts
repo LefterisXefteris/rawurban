@@ -116,7 +116,20 @@ export async function getProducts(first = 10): Promise<Product[]> {
               featuredImage {
                 url
                 altText
-              } 
+              }
+              variants(first: 10) {
+                edges {
+                  node {
+                    id
+                    title
+                    quantityAvailable
+                    selectedOptions {
+                      name
+                      value
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -170,6 +183,19 @@ export async function getCollection(
                 featuredImage {
                   url
                   altText
+                }
+                variants(first: 10) {
+                  edges {
+                    node {
+                      id
+                      title
+                      quantityAvailable
+                      selectedOptions {
+                        name
+                        value
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -247,4 +273,3 @@ export async function getProductByHandle(handle: string): Promise<Product | null
 
   return data.product;
 }
-

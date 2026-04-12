@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/navbar/page";
 import { getProducts } from "@/lib/index";
 import { Hero } from "@/components/hero";
-import { formatPrice } from "@/lib/utils";
+import { ProductCard } from "@/components/cards/ProductCard";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -118,46 +118,7 @@ export default async function Home() {
             {/* Grid */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
               {products.map((product) => (
-                <Link
-                  href={`/product/${product.handle}`}
-                  key={product.id}
-                  className="group block"
-                >
-                  {/* Image container */}
-                  <div className="relative aspect-[3/4] bg-[#f5f5f5] overflow-hidden mb-3">
-                    {product.featuredImage ? (
-                      <Image
-                        src={product.featuredImage.url}
-                        alt={product.featuredImage.altText || product.title}
-                        fill
-                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                        sizes="(max-width: 768px) 50vw, 25vw"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 bg-zinc-200" />
-                    )}
-
-                    {/* NEW badge */}
-                    <span className="absolute top-3 left-3 bg-black text-white text-[9px] font-black uppercase tracking-wider px-2 py-1 z-10">
-                      NEW
-                    </span>
-
-                    {/* Slide-up Quick Add bar */}
-                    <div className="absolute bottom-0 left-0 right-0 bg-black/90 text-white py-[10px] text-[10px] font-bold uppercase tracking-[0.25em] text-center translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-10">
-                      Quick Add
-                    </div>
-                  </div>
-
-                  {/* Product info */}
-                  <div>
-                    <h3 className="text-[11px] font-bold uppercase tracking-wide text-black leading-tight mb-1 group-hover:opacity-60 transition-opacity">
-                      {product.title}
-                    </h3>
-                    <p className="text-[11px] font-semibold text-black">
-                      {formatPrice(product.priceRange.minVariantPrice.amount)}
-                    </p>
-                  </div>
-                </Link>
+                <ProductCard key={product.id} product={product} badge="New" />
               ))}
             </div>
 
