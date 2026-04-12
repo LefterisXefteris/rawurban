@@ -21,6 +21,12 @@ Customers can browse products and complete purchases without friction — the ca
 - ✓ Navbar with scroll-aware transparency — existing
 - ✓ Shopify Storefront API integration (GraphQL) — existing
 - ✓ TypeScript throughout — existing
+- ✓ Quick Add button adds first available variant and opens cart drawer — validated in Phase 2
+- ✓ Description accordion toggles and starts expanded — validated in Phase 2
+- ✓ Size Guide opens as a centered modal with static table — validated in Phase 2
+- ✓ Newsletter form shows inline success without page reload — validated in Phase 2
+- ✓ Privacy Policy and Terms links resolve to real routes — validated in Phase 2
+- ✓ Navbar search button opens guided SearchBar overlay — validated in Phase 2
 
 ### Active
 
@@ -32,12 +38,6 @@ Customers can browse products and complete purchases without friction — the ca
 - [ ] Delete empty lib/query.ts stub
 - [ ] Fix ESLint suppression on cartContext.tsx hooks (useCallback)
 - [ ] Standardize on pnpm (remove package-lock.json)
-- [ ] Quick Add button: add first variant to cart on click
-- [ ] Description accordion: real toggle, expanded by default
-- [ ] Size Guide: modal with size chart on click
-- [ ] Newsletter form: show success message on submit
-- [ ] Privacy Policy / Terms: real links (not <span>)
-- [ ] Wire SearchBar component to navbar search button
 - [ ] Create stub pages: FAQ, Shipping, Contact, Size Guide, About
 - [ ] Fix Sale nav link href
 - [ ] Error boundaries per section (inline fallback)
@@ -73,15 +73,15 @@ Customers can browse products and complete purchases without friction — the ca
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Quick Add adds first variant | Fastest UX; no selector needed for simple products | — Pending |
-| Description accordion expanded by default | Content visible; toggle adds collapse option | — Pending |
-| Size Guide opens modal | No external page needed; generic measurements table | — Pending |
-| Newsletter shows success message (no integration) | Ships honest UX without backend dependency | — Pending |
-| Footer pages get stub routes | Links must work; placeholder > 404 | — Pending |
-| SearchBar wired to navbar button | Component already exists; wire it in | — Pending |
+| Quick Add adds first available variant | Fastest UX; no selector needed for simple products | ✓ Validated in Phase 2 |
+| Description accordion expanded by default | Content visible; toggle adds collapse option | ✓ Validated in Phase 2 |
+| Size Guide opens modal | No external page needed; generic measurements table | ✓ Validated in Phase 2 |
+| Newsletter shows success message (no integration) | Ships honest UX without backend dependency | ✓ Validated in Phase 2 |
+| Footer pages get stub routes | Links must work; placeholder > 404 | ◐ Partial in Phase 2 (privacy/terms done); remaining footer pages in Phase 3 |
+| SearchBar wired to navbar button | Component already exists; wire it in | ✓ Validated in Phase 2 |
 | Error boundaries inline per section | Isolated failures; rest of page stays functional | — Pending |
 | Loading states: skeleton screens | Matches layout shape; better perceived performance | — Pending |
 | Standardize on pnpm | pnpm-lock.yaml present; remove npm lockfile | — Pending |
 
 ---
-*Last updated: 2026-04-02 after initialization*
+*Last updated: 2026-04-12 after Phase 2 execution*
