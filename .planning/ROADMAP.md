@@ -42,11 +42,11 @@ Plans:
 5. Privacy Policy and Terms of Service in the footer navigate somewhere (link, not span)
 6. Clicking the navbar search icon opens the SearchBar input
 
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 
 Plans:
 - [x] 02-01-PLAN.md — Product-card Quick Add + footer newsletter success + legal link destinations
-- [ ] 02-02-PLAN.md — Product-page description/modal interactions + navbar search overlay
+- [x] 02-02-PLAN.md — Product-page description/modal interactions + navbar search overlay
 
 ---
 
@@ -89,7 +89,7 @@ Plans:
 | # | Phase | Goal | Requirements | Plans |
 |---|-------|------|--------------|-------|
 | 1 | Security & Code Cleanup | Remove dead weight, fix structure | SEC-01/02, DEP-01/02/03, QUAL-01/02/03/04 | 2 |
-| 2 | Bug Fixes | Every UI element works as expected | BUG-01 through BUG-06 | 2 |
+| 2 | Bug Fixes | Every interactive UI element works as expected | BUG-01 through BUG-06 | 2 |
 | 3 | Content & Navigation | No dead links | NAV-01, NAV-02 | 1 |
 | 4 | Resilience & Performance | Graceful degradation + caching | UX-01 through UX-05 | 2 |
 
