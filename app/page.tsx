@@ -2,6 +2,7 @@ import { Navbar } from "@/components/navbar/page";
 import { getProducts } from "@/lib/index";
 import { Hero } from "@/components/hero";
 import { ProductCard } from "@/components/cards/ProductCard";
+import { NewsletterSignup } from "@/components/footer/NewsletterSignup";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -233,19 +234,7 @@ export default async function Home() {
               <p className="text-sm text-zinc-500 mb-5 leading-relaxed">
                 Get early access to drops and exclusive deals.
               </p>
-              <form className="flex flex-col gap-3">
-                <input
-                  type="email"
-                  placeholder="Your email address"
-                  className="bg-zinc-900 border border-zinc-700 text-white text-[12px] px-4 py-3 placeholder:text-zinc-600 focus:outline-none focus:border-white transition-colors w-full"
-                />
-                <button
-                  type="submit"
-                  className="bg-white text-black text-[11px] font-bold uppercase tracking-[0.25em] py-3 hover:bg-zinc-200 transition-colors"
-                >
-                  Subscribe
-                </button>
-              </form>
+              <NewsletterSignup />
             </div>
           </div>
 
@@ -253,12 +242,18 @@ export default async function Home() {
           <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-zinc-900 text-[10px] text-zinc-600 uppercase tracking-[0.2em]">
             <p>© 2026 Two Stones. All rights reserved.</p>
             <div className="flex gap-6 mt-4 md:mt-0">
-              <span className="cursor-pointer hover:text-zinc-400 transition-colors">
+              <Link
+                href="/privacy-policy"
+                className="hover:text-zinc-400 transition-colors"
+              >
                 Privacy Policy
-              </span>
-              <span className="cursor-pointer hover:text-zinc-400 transition-colors">
+              </Link>
+              <Link
+                href="/terms-of-service"
+                className="hover:text-zinc-400 transition-colors"
+              >
                 Terms of Service
-              </span>
+              </Link>
             </div>
           </div>
         </div>
