@@ -23,11 +23,11 @@ export function ProductCard({
     const variants = product.variants.edges.map(({ node }) => node);
     const [firstVariant] = variants;
 
-    if (firstVariant?.quantityAvailable > 0) {
+    if (firstVariant?.availableForSale) {
       return firstVariant;
     }
 
-    return variants.find((variant) => variant.quantityAvailable > 0) ?? null;
+    return variants.find((variant) => variant.availableForSale) ?? null;
   }, [product.variants.edges]);
 
   useEffect(() => {

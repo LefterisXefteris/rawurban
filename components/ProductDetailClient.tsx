@@ -12,7 +12,7 @@ type GalleryImage = {
 type Variant = {
   id: string;
   title: string;
-  quantityAvailable: number;
+  availableForSale: boolean;
   selectedOptions: { name: string; value: string }[];
   image: { url: string; altText: string | null } | null;
   price: { amount: string; currencyCode: string };
@@ -85,7 +85,7 @@ export function ProductDetailClient({
             ["color", "colour"].includes(option.name.toLowerCase()) &&
             option.value === value
         );
-        return matchesColor && v.quantityAvailable > 0;
+        return matchesColor && v.availableForSale;
       }),
     };
   });

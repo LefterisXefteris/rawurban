@@ -1,7 +1,9 @@
 // lib/shopify.ts
 
 const domain = process.env.SHOPIFY_STORE_DOMAIN;
-const token = process.env.STOREFRONT_ACCESS_TOKEN;
+const token =
+  process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN ??
+  process.env.STOREFRONT_ACCESS_TOKEN;
 
 if (!domain) {
   throw new Error(
@@ -10,7 +12,7 @@ if (!domain) {
 }
 if (!token) {
   throw new Error(
-    "[Shopify] STOREFRONT_ACCESS_TOKEN is not set. Add it to .env.local."
+    "[Shopify] SHOPIFY_STOREFRONT_ACCESS_TOKEN is not set. Add it to .env.local."
   );
 }
 
@@ -55,7 +57,7 @@ type Product = {
       node: {
         id: string;
         title: string;
-        quantityAvailable: number;
+        availableForSale: boolean;
         selectedOptions: { name: string; value: string }[];
         image: {
           url: string;
@@ -142,7 +144,7 @@ export async function getProducts(first = 10): Promise<Product[]> {
                   node {
                     id
                     title
-                    quantityAvailable
+                    availableForSale
                     selectedOptions {
                       name
                       value
@@ -217,7 +219,7 @@ export async function getCollection(
                     node {
                       id
                       title
-                      quantityAvailable
+                      availableForSale
                       selectedOptions {
                         name
                         value
@@ -293,7 +295,7 @@ export async function getProductByHandle(handle: string): Promise<Product | null
               node {
                 id
                 title
-                quantityAvailable
+                availableForSale
                 selectedOptions {
                   name
                   value

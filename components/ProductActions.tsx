@@ -9,7 +9,7 @@ type Option = { name: string; values: string[] };
 type Variant = {
   id: string;
   title: string;
-  quantityAvailable: number;
+  availableForSale: boolean;
   selectedOptions: { name: string; value: string }[];
   price: { amount: string; currencyCode: string };
 };
@@ -117,7 +117,7 @@ export function ProductActions({
             (o) => isColorOption(o.name) && o.value === activeColor
           )
         : true;
-      return sizeMatches && colorMatches && v.quantityAvailable > 0;
+      return sizeMatches && colorMatches && v.availableForSale;
     });
   }
 
@@ -132,7 +132,7 @@ export function ProductActions({
             (o) => isSizeOption(o.name) && o.value === selectedSize
           )
         : true;
-      return colorMatches && sizeMatches && v.quantityAvailable > 0;
+      return colorMatches && sizeMatches && v.availableForSale;
     });
   }
 
@@ -140,7 +140,7 @@ export function ProductActions({
     ? `£${parseFloat(selectedVariant.price.amount).toFixed(2)}`
     : null;
 
-  const isOOS = selectedVariant ? selectedVariant.quantityAvailable === 0 : false;
+  const isOOS = selectedVariant ? !selectedVariant.availableForSale : false;
 
   // Fallback: single variant, no options — just show price + add to cart
   const hasOptions = (sizeOption?.values.length ?? 0) > 0 || (colorOption?.values.length ?? 0) > 0;
@@ -252,7 +252,7 @@ export function ProductActions({
                 onClick={() => {
                   setSelectedSize(v.title);
                 }}
-                disabled={v.quantityAvailable === 0}
+                disabled={!v.availableForSale}
                 className={[
                   "px-5 py-2 text-[11px] font-semibold uppercase tracking-wider border transition-colors disabled:opacity-35 disabled:cursor-not-allowed",
                   selectedVariant?.id === v.id
@@ -261,7 +261,7 @@ export function ProductActions({
                 ].join(" ")}
               >
                 {v.title}
-                {v.quantityAvailable === 0 && (
+                {!v.availableForSale && (
                   <span className="ml-1 text-[9px] normal-case tracking-normal opacity-60">
                     · sold out
                   </span>
