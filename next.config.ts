@@ -22,6 +22,11 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
+        source: "/cart/:path*",
+        destination: "/api/checkout/cart/:path*",
+        permanent: false,
+      },
+      {
         source: "/checkouts/c/:path*",
         destination: `https://${shopifyCheckoutHost}/checkouts/c/:path*`,
         permanent: false,
