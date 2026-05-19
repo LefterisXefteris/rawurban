@@ -50,7 +50,7 @@ export type Cart = {
 };
 
 const checkoutDomain =
-  process.env.SHOPIFY_CHECKOUT_DOMAIN ?? "www.twostones.store";
+  process.env.SHOPIFY_STORE_DOMAIN ?? "rawurban-3.myshopify.com";
 
 function normalizeCheckoutUrl(checkoutUrl: string): string {
   if (!checkoutDomain) return checkoutUrl;
