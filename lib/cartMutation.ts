@@ -49,6 +49,34 @@ export type Cart = {
   };
 };
 
+const checkoutDomain =
+  process.env.SHOPIFY_CHECKOUT_DOMAIN ?? process.env.SHOPIFY_STORE_DOMAIN;
+
+function normalizeCheckoutUrl(checkoutUrl: string): string {
+  if (!checkoutDomain) return checkoutUrl;
+
+  try {
+    const url = new URL(checkoutUrl);
+    url.hostname = checkoutDomain;
+    url.protocol = "https:";
+
+    if (url.pathname.startsWith("/cart/c/")) {
+      url.pathname = url.pathname.replace("/cart/c/", "/checkouts/c/");
+    }
+
+    return url.toString();
+  } catch {
+    return checkoutUrl;
+  }
+}
+
+function normalizeCart(cart: Cart): Cart {
+  return {
+    ...cart,
+    checkoutUrl: normalizeCheckoutUrl(cart.checkoutUrl),
+  };
+}
+
 /**
  * Creates a new cart with initial items
  *
@@ -111,7 +139,7 @@ export async function createCart(lines: Array<{ merchandiseId: string; quantity:
   if (data.cartCreate.userErrors?.length) {
     throw new Error(data.cartCreate.userErrors[0].message);
   }
-  return data.cartCreate.cart;
+  return normalizeCart(data.cartCreate.cart);
 }
 
 export async function getCart(cartId: string): Promise<Cart | null> {
@@ -158,7 +186,7 @@ export async function getCart(cartId: string): Promise<Cart | null> {
   `;
 
   const { data } = await shopifyFetch<{ cart: Cart }>(query, { cartId });
-  return data.cart;
+  return data.cart ? normalizeCart(data.cart) : null;
 }
 export async function addToCart(cartId: string, lines: Array<{ merchandiseId: string; quantity: number }>) {
   const mutation = `
@@ -213,7 +241,7 @@ export async function addToCart(cartId: string, lines: Array<{ merchandiseId: st
   const { data, errors } = await shopifyFetch<{ cartLinesAdd: { cart: Cart; userErrors: { field: string; message: string }[] } }>(mutation, { cartId, lines });
   if (errors?.length) throw new Error(errors[0].message);
   if (data.cartLinesAdd.userErrors?.length) throw new Error(data.cartLinesAdd.userErrors[0].message);
-  return data.cartLinesAdd.cart;
+  return normalizeCart(data.cartLinesAdd.cart);
 }
 
 export async function updateCart(cartId: string, lines: Array<{ id: string; quantity: number }>) {
@@ -269,7 +297,7 @@ export async function updateCart(cartId: string, lines: Array<{ id: string; quan
   const { data, errors } = await shopifyFetch<{ cartLinesUpdate: { cart: Cart; userErrors: { field: string; message: string }[] } }>(mutation, { cartId, lines });
   if (errors?.length) throw new Error(errors[0].message);
   if (data.cartLinesUpdate.userErrors?.length) throw new Error(data.cartLinesUpdate.userErrors[0].message);
-  return data.cartLinesUpdate.cart;
+  return normalizeCart(data.cartLinesUpdate.cart);
 }
 
 export async function removeFromCart(cartId: string, lineIds: string[]) {
@@ -327,6 +355,5 @@ export async function removeFromCart(cartId: string, lineIds: string[]) {
   }>(mutation, { cartId, lineIds });
   if (errors?.length) throw new Error(errors[0].message);
   if (data.cartLinesRemove.userErrors?.length) throw new Error(data.cartLinesRemove.userErrors[0].message);
-  return data.cartLinesRemove.cart;
+  return normalizeCart(data.cartLinesRemove.cart);
 }
-
