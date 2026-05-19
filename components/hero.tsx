@@ -27,7 +27,7 @@ export function Hero({ products = [] }: { products?: HeroProduct[] }) {
 
   const current = products[idx];
   const price = current
-    ? `$${parseFloat(current.priceRange.minVariantPrice.amount).toFixed(2)}`
+    ? `£${parseFloat(current.priceRange.minVariantPrice.amount).toFixed(2)}`
     : null;
 
   return (
@@ -65,9 +65,9 @@ export function Hero({ products = [] }: { products?: HeroProduct[] }) {
         </AnimatePresence>
 
         {/* Mobile dark overlay; desktop light vignette at left edge */}
-        <div className="absolute inset-0 bg-black/60 lg:bg-gradient-to-r lg:from-black/30 lg:via-transparent lg:to-transparent" />
+        <div className="absolute inset-0 bg-black/35 lg:bg-gradient-to-r lg:from-black/15 lg:via-transparent lg:to-transparent" />
         {/* Bottom vignette */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
 
         {/* ── Product label ── */}
         <AnimatePresence mode="wait">

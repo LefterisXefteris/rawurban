@@ -9,30 +9,116 @@ type GalleryImage = {
   altText: string | null;
 };
 
+type ColorChoice = {
+  value: string;
+  hex: string | null;
+  image?: GalleryImage | null;
+  available: boolean;
+};
+
 export function ProductGallery({
   images,
   title,
+  activeIndex,
+  onIndexChange,
+  colors,
+  selectedColor,
+  onColorChange,
 }: {
   images: GalleryImage[];
   title: string;
+  activeIndex?: number;
+  onIndexChange?: (index: number) => void;
+  colors?: ColorChoice[];
+  selectedColor?: string | null;
+  onColorChange?: (color: string) => void;
 }) {
-  const [idx, setIdx] = useState(0);
-  const [direction, setDirection] = useState(0);
+  const [internalIdx, setInternalIdx] = useState(0);
+
+  // Use controlled index if provided, otherwise internal
+  const idx = activeIndex ?? internalIdx;
+  const setIdx = onIndexChange ?? setInternalIdx;
 
   if (!images.length) {
     return <div className="aspect-[4/5] bg-zinc-100" />;
   }
 
   const go = (next: number) => {
-    setDirection(next > idx ? 1 : -1);
     setIdx(next);
   };
+  const direction = 1;
 
   const prev = () => go(idx === 0 ? images.length - 1 : idx - 1);
   const next = () => go(idx === images.length - 1 ? 0 : idx + 1);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="grid gap-3 md:grid-cols-[88px_minmax(0,1fr)]">
+      {colors && colors.length > 0 && (
+        <aside className="order-2 md:order-1 md:row-span-2">
+          <div className="border border-zinc-200 bg-white p-2 md:sticky md:top-28">
+            <p className="mb-2 px-1 text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-500">
+              Colour
+            </p>
+            <div className="flex gap-2 overflow-x-auto md:flex-col md:overflow-visible">
+              {colors.map((color) => {
+                const isSelected = selectedColor === color.value;
+
+                return (
+                  <button
+                    key={color.value}
+                    type="button"
+                    title={color.value}
+                    aria-label={`Select ${color.value}`}
+                    aria-pressed={isSelected}
+                    disabled={!color.available}
+                    onClick={() => onColorChange?.(color.value)}
+                    className={[
+                      "group relative h-16 w-16 shrink-0 overflow-hidden border bg-[#f5f5f5] transition-all disabled:cursor-not-allowed disabled:opacity-40",
+                      isSelected
+                        ? "border-black ring-1 ring-black ring-offset-1"
+                        : "border-zinc-200 hover:border-zinc-500",
+                    ].join(" ")}
+                  >
+                    {color.image ? (
+                      <Image
+                        src={color.image.url}
+                        alt={color.image.altText || color.value}
+                        fill
+                        className="object-cover"
+                        sizes="64px"
+                      />
+                    ) : (
+                      <span
+                        className="absolute inset-0"
+                        style={
+                          color.hex
+                            ? { backgroundColor: color.hex }
+                            : undefined
+                        }
+                      />
+                    )}
+                    {!color.hex && !color.image && (
+                      <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold uppercase text-black">
+                        {color.value.slice(0, 2)}
+                      </span>
+                    )}
+                    <span className="absolute inset-x-0 bottom-0 bg-white/90 px-1 py-1 text-[8px] font-bold uppercase tracking-[0.08em] text-black opacity-0 transition-opacity group-hover:opacity-100">
+                      {color.value}
+                    </span>
+                    {!color.available && (
+                      <span className="absolute inset-0 flex items-center justify-center">
+                        <span className="block h-px w-[140%] rotate-45 bg-zinc-500" />
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </aside>
+      )}
+
+      <div className="order-1 flex flex-col gap-3 md:order-2">
       {/* ── Main image ── */}
       <div className="relative aspect-[4/5] bg-[#f5f5f5] overflow-hidden group">
         <AnimatePresence mode="wait" custom={direction}>
@@ -107,6 +193,7 @@ export function ProductGallery({
           ))}
         </div>
       )}
+      </div>
     </div>
   );
 }

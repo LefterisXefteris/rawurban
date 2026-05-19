@@ -1,0 +1,21 @@
+# New Season Arrivals
+
+This website features the latest outdoor collection, specializing in high-quality snowboards and related products. It caters to outdoor enthusiasts looking for stylish and functional gear. The site presents a variety of featured products, including a range of snowboards at different price points, alongside gift cards.
+
+## Featured Products
+
+The featured products section showcases a selection of snowboards and accessories. Each product is accompanied by an image, a brief title, and pricing information. Here are some notable products available:
+
+- **[Gift Card](https://cdn.shopify.com/s/files/1/1007/2014/8821/files/gift_card.png?v=1766441437)** - 10.0 GBP
+- **[The Inventory Not Tracked Snowboard](https://cdn.shopify.com/s/files/1/1007/2014/8821/files/snowboard_purple_hydrogen.png?v=1766441438)** - 949.95 GBP
+- **[The Minimal Snowboard](https://cdn.shopify.com/s/files/1/1007/2014/8821/files/Main.jpg?v=1766441436)** - 885.95 GBP
+- **[The Compare at Price Snowboard](https://cdn.shopify.com/s/files/1/1007/2014/8821/files/Main_0a40b01b-5021-48c1-80d1-aa8ab4876d3d.jpg?v=1766441436)** - 785.95 GBP
+- **[The Collection Snowboard: Liquid](https://cdn.shopify.com/s/files/1/1007/2014/8821/files/Main_b13ad453-477c-4ed1-9b43-81f3345adfd6.jpg?v=1766441438)** - 749.95 GBP
+
+## About Us
+
+The "About Us" section provides a glimpse into the brand's story, adding a personal touch and connecting with customers.
+
+## Shopping Cart
+
+The shopping cart feature is straightforward, displaying the current contents of the user's cart. At present, it shows that the cart is empty, encouraging users to explore and add products for purchase.

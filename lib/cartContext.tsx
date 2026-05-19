@@ -8,14 +8,10 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
-import {
-  Cart,
-  createCart,
-  addToCart,
-  updateCart,
-  removeFromCart,
-  getCart,
-} from "@/lib/cartMutation";
+import type { Cart, CartLine } from "@/lib/cartMutation";
+
+// Re-export Cart and CartLine types so consumers don't need to import from cartMutation
+export type { Cart, CartLine };
 
 type CartContextType = {
   cart: Cart | null;
@@ -30,6 +26,25 @@ type CartContextType = {
 };
 
 const CartContext = createContext<CartContextType | null>(null);
+
+// ── API helpers ────────────────────────────────────────────────────────────────
+// These call /api/cart (a Next.js Route Handler) so that lib/index.ts and its
+// top-level Shopify credential checks never enter the client bundle.
+
+async function apiCart<T>(body: Record<string, unknown>): Promise<T> {
+  const res = await fetch("/api/cart", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: res.statusText }));
+    throw new Error(err.error ?? "Cart API error");
+  }
+  return res.json() as Promise<T>;
+}
+
+// ── Cart validation ────────────────────────────────────────────────────────────
 
 /** Returns true if a cart looks valid (has lines with real prices and quantities) */
 function isValidCart(c: Cart): boolean {
@@ -59,7 +74,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    getCart(cartId)
+    apiCart<Cart | null>({ action: "get", cartId })
       .then((c) => {
         if (!c) {
           // Cart expired / not found — clear stale ID
@@ -86,15 +101,25 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       if (cartId) {
         try {
-          updated = await addToCart(cartId, [{ merchandiseId, quantity }]);
+          updated = await apiCart<Cart>({
+            action: "add",
+            cartId,
+            lines: [{ merchandiseId, quantity }],
+          });
         } catch {
           // Cart expired — create a fresh one
           clearStoredCart();
-          updated = await createCart([{ merchandiseId, quantity }]);
+          updated = await apiCart<Cart>({
+            action: "create",
+            lines: [{ merchandiseId, quantity }],
+          });
           localStorage.setItem("cartId", updated.id);
         }
       } else {
-        updated = await createCart([{ merchandiseId, quantity }]);
+        updated = await apiCart<Cart>({
+          action: "create",
+          lines: [{ merchandiseId, quantity }],
+        });
         localStorage.setItem("cartId", updated.id);
       }
 
@@ -108,12 +133,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // ── Remove item implementation ────────────────────────────────────────────
-  // Deps: setLoading and setCart are React state setters (stable by React guarantee).
-  // removeFromCart is a module-level import (stable). Empty array is correct.
   const removeItemImpl = useCallback(async (cartId: string, lineId: string) => {
     setLoading(true);
     try {
-      const updated = await removeFromCart(cartId, [lineId]);
+      const updated = await apiCart<Cart>({
+        action: "remove",
+        cartId,
+        lineIds: [lineId],
+      });
       setCart(updated);
     } catch (err) {
       console.error("[Cart] removeItem error:", err);
@@ -134,7 +161,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     setLoading(true);
     try {
-      const updated = await updateCart(cartId, [{ id: lineId, quantity }]);
+      const updated = await apiCart<Cart>({
+        action: "update",
+        cartId,
+        lines: [{ id: lineId, quantity }],
+      });
       setCart(updated);
     } catch (err) {
       console.error("[Cart] updateItem error:", err);

@@ -45,7 +45,7 @@ const COLOR_MAP: Record<string, string> = {
   stone: "#b5a49a",
 };
 
-function colorForValue(value: string): string | null {
+export function colorForValue(value: string): string | null {
   const key = value.toLowerCase().trim();
   for (const [name, hex] of Object.entries(COLOR_MAP)) {
     if (key === name || key.includes(name)) return hex;
@@ -64,28 +64,38 @@ function isSizeOption(name: string): boolean {
 export function ProductActions({
   variants,
   options,
+  selectedColor,
   onColorChange,
+  showColorSelector = true,
 }: {
   variants: Variant[];
   options?: Option[];
+  selectedColor?: string | null;
   onColorChange?: (color: string) => void;
+  showColorSelector?: boolean;
 }) {
   const sizeOption = options?.find((o) => isSizeOption(o.name));
   const colorOption = options?.find((o) => isColorOption(o.name));
 
-  const [selectedColor, setSelectedColor] = useState<string | null>(
+  const [internalColor, setInternalColor] = useState<string | null>(
     colorOption?.values[0] ?? null
   );
   const [selectedSize, setSelectedSize] = useState<string | null>(
     sizeOption?.values[0] ?? null
   );
+  const activeColor = selectedColor ?? internalColor;
+
+  function selectColor(color: string) {
+    setInternalColor(color);
+    onColorChange?.(color);
+  }
 
   // Find matching variant based on selected options
   const selectedVariant = variants.find((v) => {
     if (!v.selectedOptions?.length) return false;
-    const colorMatch = colorOption
-      ? v.selectedOptions.some(
-          (o) => isColorOption(o.name) && o.value === selectedColor
+      const colorMatch = colorOption
+        ? v.selectedOptions.some(
+          (o) => isColorOption(o.name) && o.value === activeColor
         )
       : true;
     const sizeMatch = sizeOption
@@ -103,8 +113,8 @@ export function ProductActions({
         (o) => isSizeOption(o.name) && o.value === size
       );
       const colorMatches = colorOption
-        ? v.selectedOptions?.some(
-            (o) => isColorOption(o.name) && o.value === selectedColor
+          ? v.selectedOptions?.some(
+            (o) => isColorOption(o.name) && o.value === activeColor
           )
         : true;
       return sizeMatches && colorMatches && v.quantityAvailable > 0;
@@ -144,26 +154,23 @@ export function ProductActions({
       )}
 
       {/* Color selector */}
-      {colorOption && colorOption.values.length > 0 && (
+      {showColorSelector && colorOption && colorOption.values.length > 0 && (
         <div>
           <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3">
             Colour:{" "}
-            <span className="font-semibold">{selectedColor}</span>
+            <span className="font-semibold">{activeColor}</span>
           </p>
           <div className="flex flex-wrap gap-2">
             {colorOption.values.map((val) => {
               const hex = colorForValue(val);
               const available = isColorAvailable(val);
-              const isSelected = selectedColor === val;
+              const isSelected = activeColor === val;
 
               return (
                 <button
                   key={val}
                   title={val}
-                  onClick={() => {
-                    setSelectedColor(val);
-                    onColorChange?.(val);
-                  }}
+                  onClick={() => selectColor(val)}
                   disabled={!available}
                   className={[
                     "relative w-9 h-9 rounded-full border-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed",

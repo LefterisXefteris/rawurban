@@ -15,6 +15,7 @@ if (!token) {
 }
 
 const SHOPIFY_API_VERSION = "2024-01";
+const SHOPIFY_ENDPOINT = `https://${domain}/api/${SHOPIFY_API_VERSION}/graphql.json`;
 
 // Types
 type ShopifyResponse<T> = {
@@ -84,14 +85,33 @@ export async function shopifyFetch<T>(
   query: string,
   variables: Record<string, unknown> = {}
 ): Promise<ShopifyResponse<T>> {
-  const response = await fetch(`https://${domain}/api/${SHOPIFY_API_VERSION}/graphql.json`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Shopify-Storefront-Access-Token': token as string,
-    },
-    body: JSON.stringify({ query, variables }),
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(SHOPIFY_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Shopify-Storefront-Access-Token': token as string,
+      },
+      body: JSON.stringify({ query, variables }),
+    });
+  } catch (error) {
+    const cause =
+      error instanceof Error && "cause" in error && error.cause instanceof Error
+        ? ` (${error.cause.message})`
+        : "";
+
+    throw new Error(
+      `[Shopify] Could not reach ${domain}${cause}. Check SHOPIFY_STORE_DOMAIN in .env.local and make sure it is the permanent .myshopify.com domain for your store.`
+    );
+  }
+
+  if (!response.ok) {
+    throw new Error(
+      `[Shopify] Storefront API request failed with ${response.status} ${response.statusText}. Check your store domain, Storefront API token, and API version.`
+    );
+  }
 
   return response.json();
 }
@@ -101,7 +121,7 @@ export async function getProducts(first = 10): Promise<Product[]> {
   const { data, errors } = await shopifyFetch<ProductsQuery>(
     `
       query ($first: Int!) {
-        products(first: $first) {
+        products(first: $first, sortKey: CREATED_AT, reverse: true) {
           edges { 
             node {
               id
@@ -162,6 +182,14 @@ export async function getCollection(
   handle: string,
   first = 48
 ): Promise<{ title: string; description: string; products: Product[] } | null> {
+  if (handle === "all") {
+    return {
+      title: "All Products",
+      description: "",
+      products: await getProducts(first),
+    };
+  }
+
   const { data, errors } = await shopifyFetch<CollectionQuery>(
     `
       query getCollection($handle: String!, $first: Int!) {
@@ -207,12 +235,32 @@ export async function getCollection(
   );
 
   if (errors) throw new Error(errors[0].message);
-  if (!data.collection) return null;
+  if (!data.collection) {
+    if (handle === "new-arrivals") {
+      return {
+        title: "New Arrivals",
+        description: "",
+        products: await getProducts(first),
+      };
+    }
+
+    return null;
+  }
+
+  const products = data.collection.products.edges.map((e) => e.node);
+
+  if (handle === "new-arrivals" && products.length === 0) {
+    return {
+      title: data.collection.title || "New Arrivals",
+      description: data.collection.description,
+      products: await getProducts(first),
+    };
+  }
 
   return {
     title: data.collection.title,
     description: data.collection.description,
-    products: data.collection.products.edges.map((e) => e.node),
+    products,
   };
 }
 

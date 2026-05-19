@@ -28,6 +28,9 @@
 
 @layer base {
   :root {
+    --font-display: 'Bebas Neue';
+    --font-sans: 'Barlow';
+    --font-serif: 'Cormorant Garamond';
     --background: 0 0% 100%;
     --foreground: 0 0% 5%;
     --card: 0 0% 100%;

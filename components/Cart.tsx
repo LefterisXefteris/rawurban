@@ -179,12 +179,24 @@ export function Cart({ isDark = true }: { isDark?: boolean }) {
                         </div>
                       </div>
 
-                      {/* Variant label */}
-                      {variantLabel && (
+                      {/* Variant options (Colour / Size / etc.) */}
+                      {node.merchandise.selectedOptions?.filter(
+                        (o) => o.value !== 'Default Title'
+                      ).length > 0 ? (
+                        <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5">
+                          {node.merchandise.selectedOptions
+                            .filter((o) => o.value !== 'Default Title')
+                            .map((o) => (
+                              <p key={o.name} className="text-[10px] text-zinc-400 uppercase tracking-[0.1em]">
+                                {o.name}: <span className="text-zinc-600">{o.value}</span>
+                              </p>
+                            ))}
+                        </div>
+                      ) : variantLabel ? (
                         <p className="mt-1 text-[10px] text-zinc-400 uppercase tracking-[0.1em]">
                           {variantLabel}
                         </p>
-                      )}
+                      ) : null}
 
                       {/* Out-of-stock warning */}
                       {node.quantity === 0 && (

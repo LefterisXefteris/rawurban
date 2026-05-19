@@ -7,7 +7,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default async function Home() {
-  const products = await getProducts(12);
+  const products = await getProducts(20);
   // First 4 products cycle in the hero; first 2 back the editorial tiles
   const heroProducts = products.slice(0, 4);
   const tile1 = products[0];
@@ -126,10 +126,10 @@ export default async function Home() {
             {/* Mobile CTA */}
             <div className="mt-10 text-center md:hidden">
               <Link
-                href="/collections/all"
+                href="/collections/new-arrivals"
                 className="inline-block bg-black text-white text-[11px] font-bold uppercase tracking-[0.25em] px-12 py-4"
               >
-                View All Products
+                View All
               </Link>
             </div>
           </div>

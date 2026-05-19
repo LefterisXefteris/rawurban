@@ -1,6 +1,9 @@
 {
   "mode": "yolo",
-  "depth": "quick",
   "parallelization": "parallel",
-  "created": "2026-04-02"
+  "created": "2026-04-02",
+  "granularity": "coarse",
+  "workflow": {
+    "_auto_chain_active": false
+  }
 }

@@ -1,29 +1,6 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, Barlow, Cormorant_Garamond } from "next/font/google";
 import { CartProvider } from "@/lib/cartContext";
 import "./globals.css";
-
-const bebasNeue = Bebas_Neue({
-  weight: "400",
-  variable: "--font-display",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const barlow = Barlow({
-  variable: "--font-sans",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  display: "swap",
-});
-
-const cormorant = Cormorant_Garamond({
-  variable: "--font-serif",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Two Stones | Premium Streetwear",
@@ -37,7 +14,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${bebasNeue.variable} ${barlow.variable} ${cormorant.variable} antialiased`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body className="antialiased">
         <CartProvider>
           {children}
         </CartProvider>
