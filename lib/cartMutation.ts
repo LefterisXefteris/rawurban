@@ -52,7 +52,7 @@ export type Cart = {
 const checkoutDomain =
   process.env.SHOPIFY_CHECKOUT_DOMAIN ??
   process.env.SHOPIFY_STORE_DOMAIN ??
-  "rawurban-3.myshopify.com";
+  "52ps1h-0t.myshopify.com";
 
 function normalizeCheckoutUrl(checkoutUrl: string): string {
   if (!checkoutDomain) return checkoutUrl;

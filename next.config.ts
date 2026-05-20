@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
+const defaultShopifyDomain = "52ps1h-0t.myshopify.com";
 const shopifyCheckoutHost =
-  process.env.SHOPIFY_STORE_DOMAIN ?? "rawurban-3.myshopify.com";
+  process.env.SHOPIFY_CHECKOUT_DOMAIN ??
+  process.env.SHOPIFY_STORE_DOMAIN ??
+  defaultShopifyDomain;
 
 const nextConfig: NextConfig = {
   images: {
