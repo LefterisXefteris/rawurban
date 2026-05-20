@@ -147,10 +147,10 @@ export function ProductActions({
   const singleVariantNoOptions = !hasOptions && variants.length === 1;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 md:space-y-6">
       {/* Price */}
       {unitPrice && (
-        <p className="text-2xl font-bold tracking-wide">{unitPrice}</p>
+        <p className="text-xl font-bold tracking-wide md:text-2xl">{unitPrice}</p>
       )}
 
       {/* Color selector */}
@@ -173,7 +173,7 @@ export function ProductActions({
                   onClick={() => selectColor(val)}
                   disabled={!available}
                   className={[
-                    "relative w-9 h-9 rounded-full border-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed",
+                    "relative h-11 w-11 rounded-full border-2 transition-all disabled:cursor-not-allowed disabled:opacity-40 md:h-9 md:w-9",
                     isSelected
                       ? "border-black scale-110 shadow-md"
                       : "border-transparent hover:border-zinc-400",
@@ -209,7 +209,7 @@ export function ProductActions({
             </span>
             <SizeGuideModal />
           </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-4 gap-2 sm:flex sm:flex-wrap">
             {sizeOption.values.map((val) => {
               const available = isSizeAvailable(val);
               const isSelected = selectedSize === val;
@@ -219,7 +219,7 @@ export function ProductActions({
                   onClick={() => setSelectedSize(val)}
                   disabled={!available}
                   className={[
-                    "px-5 py-2 text-[11px] font-semibold uppercase tracking-wider border transition-colors disabled:opacity-35 disabled:cursor-not-allowed",
+                    "min-h-11 px-3 py-2 text-[11px] font-semibold uppercase tracking-wider border transition-colors disabled:cursor-not-allowed disabled:opacity-35 sm:px-5 sm:min-h-0",
                     isSelected
                       ? "bg-black text-white border-black"
                       : "bg-white text-black border-zinc-300 hover:border-black",
@@ -245,7 +245,7 @@ export function ProductActions({
             Option:{" "}
             <span className="font-semibold">{selectedVariant?.title}</span>
           </p>
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
             {variants.map((v) => (
               <button
                 key={v.id}
@@ -254,7 +254,7 @@ export function ProductActions({
                 }}
                 disabled={!v.availableForSale}
                 className={[
-                  "px-5 py-2 text-[11px] font-semibold uppercase tracking-wider border transition-colors disabled:opacity-35 disabled:cursor-not-allowed",
+                  "min-h-11 px-3 py-2 text-[11px] font-semibold uppercase tracking-wider border transition-colors disabled:cursor-not-allowed disabled:opacity-35 sm:px-5 sm:min-h-0",
                   selectedVariant?.id === v.id
                     ? "bg-black text-white border-black"
                     : "bg-white text-black border-zinc-300 hover:border-black",
@@ -285,7 +285,7 @@ export function ProductActions({
       )}
 
       {/* Trust badges */}
-      <ul className="space-y-2 pt-2">
+      <ul className="space-y-2 pt-1 md:pt-2">
         {[
           "Free UK delivery on orders over £75",
           "Free returns on all orders",
@@ -293,7 +293,7 @@ export function ProductActions({
         ].map((item) => (
           <li
             key={item}
-            className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-zinc-500"
+            className="flex items-start gap-2 text-[10px] uppercase leading-relaxed tracking-wider text-zinc-500 md:items-center md:text-[11px]"
           >
             <span className="text-green-600 font-bold">✓</span>
             {item}

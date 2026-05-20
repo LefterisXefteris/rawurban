@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { colorForValue, ProductActions } from "./ProductActions";
 import { ProductGallery } from "./ProductGallery";
 
@@ -20,6 +20,99 @@ type Variant = {
 
 type Option = { name: string; values: string[] };
 
+function isColorOptionName(name: string): boolean {
+  return ["color", "colour"].includes(name.toLowerCase());
+}
+
+function normalizeOptionValue(value: string): string {
+  return value.trim().toLowerCase();
+}
+
+function imageKey(url: string): string {
+  return url.split("?")[0];
+}
+
+function uniqueImages(images: GalleryImage[]): GalleryImage[] {
+  const seen = new Set<string>();
+
+  return images.filter((image) => {
+    const key = imageKey(image.url);
+
+    if (seen.has(key)) {
+      return false;
+    }
+
+    seen.add(key);
+    return true;
+  });
+}
+
+function variantMatchesColor(variant: Variant, color: string): boolean {
+  const normalizedColor = normalizeOptionValue(color);
+
+  return variant.selectedOptions?.some(
+    (option) =>
+      isColorOptionName(option.name) &&
+      normalizeOptionValue(option.value) === normalizedColor
+  );
+}
+
+function variantImagesForColor(variants: Variant[], color: string): GalleryImage[] {
+  return uniqueImages(
+    variants
+      .filter((variant) => variantMatchesColor(variant, color))
+      .map((variant) => variant.image)
+      .filter((image): image is GalleryImage => Boolean(image?.url))
+  );
+}
+
+function galleryImagesForColor({
+  images,
+  variants,
+  color,
+  allColors,
+}: {
+  images: GalleryImage[];
+  variants: Variant[];
+  color: string;
+  allColors: string[];
+}): GalleryImage[] {
+  const variantImages = variantImagesForColor(variants, color);
+
+  if (variantImages.length === 0) {
+    return images;
+  }
+
+  if (variantImages.length > 1) {
+    return variantImages;
+  }
+
+  const startKey = imageKey(variantImages[0].url);
+  const startIndex = images.findIndex((image) => imageKey(image.url) === startKey);
+
+  if (startIndex === -1) {
+    return variantImages;
+  }
+
+  const otherColorMarkerKeys = new Set(
+    allColors
+      .filter(
+        (value) => normalizeOptionValue(value) !== normalizeOptionValue(color)
+      )
+      .flatMap((value) => variantImagesForColor(variants, value))
+      .map((image) => imageKey(image.url))
+  );
+
+  const nextColorIndex = images.findIndex(
+    (image, index) =>
+      index > startIndex && otherColorMarkerKeys.has(imageKey(image.url))
+  );
+  const endIndex = nextColorIndex === -1 ? images.length : nextColorIndex;
+  const orderedColorImages = uniqueImages(images.slice(startIndex, endIndex));
+
+  return orderedColorImages.length > 0 ? orderedColorImages : variantImages;
+}
+
 export function ProductDetailClient({
   images,
   title,
@@ -33,68 +126,51 @@ export function ProductDetailClient({
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const colorOption = options?.find((option) =>
-    ["color", "colour"].includes(option.name.toLowerCase())
+    isColorOptionName(option.name)
   );
   const [selectedColor, setSelectedColor] = useState<string | null>(
     colorOption?.values[0] ?? null
   );
+  const galleryImages = useMemo(() => {
+    if (!selectedColor || !colorOption) {
+      return images;
+    }
+
+    return galleryImagesForColor({
+      images,
+      variants,
+      color: selectedColor,
+      allColors: colorOption.values,
+    });
+  }, [colorOption, images, selectedColor, variants]);
 
   const handleColorChange = useCallback(
     (color: string) => {
       setSelectedColor(color);
-
-      // Find a variant matching this color to get its image
-      const variant = variants.find((v) =>
-        v.selectedOptions?.some(
-          (o) =>
-            ["color", "colour"].includes(o.name.toLowerCase()) &&
-            o.value === color
-        )
-      );
-
-      if (variant?.image?.url) {
-        // Compare base paths without query params (Shopify CDN may add different params)
-        const variantBase = variant.image.url.split("?")[0];
-        const matchIdx = images.findIndex(
-          (img) => img.url.split("?")[0] === variantBase
-        );
-        if (matchIdx !== -1) {
-          setActiveIndex(matchIdx);
-        }
-      }
+      setActiveIndex(0);
     },
-    [variants, images]
+    []
   );
 
   const colorChoices = colorOption?.values.map((value) => {
-    const variant = variants.find((v) =>
-      v.selectedOptions?.some(
-        (option) =>
-          ["color", "colour"].includes(option.name.toLowerCase()) &&
-          option.value === value
-      )
-    );
+    const variant = variants.find((v) => variantMatchesColor(v, value));
 
     return {
       value,
       hex: colorForValue(value),
       image: variant?.image,
       available: variants.some((v) => {
-        const matchesColor = v.selectedOptions?.some(
-          (option) =>
-            ["color", "colour"].includes(option.name.toLowerCase()) &&
-            option.value === value
-        );
+        const matchesColor = variantMatchesColor(v, value);
         return matchesColor && v.availableForSale;
       }),
     };
   });
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+    <div className="grid grid-cols-1 gap-7 md:gap-10 lg:grid-cols-2 lg:gap-20">
       {/* Gallery */}
       <ProductGallery
-        images={images}
+        images={galleryImages}
         title={title}
         activeIndex={activeIndex}
         onIndexChange={setActiveIndex}
@@ -105,10 +181,10 @@ export function ProductDetailClient({
 
       {/* Info */}
       <div className="flex flex-col justify-center lg:py-8">
-        <p className="text-[10px] uppercase tracking-[0.4em] text-zinc-400 mb-2">
+        <p className="mb-2 text-[10px] uppercase tracking-[0.32em] text-zinc-400 md:tracking-[0.4em]">
           Two Stones
         </p>
-        <h1 className="text-3xl md:text-4xl font-bold uppercase tracking-wide leading-tight mb-6">
+        <h1 className="mb-5 text-2xl font-bold uppercase leading-tight tracking-wide md:mb-6 md:text-4xl">
           {title}
         </h1>
         <ProductActions

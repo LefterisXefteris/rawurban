@@ -21,14 +21,14 @@ export async function ProductDetail({ handle }: { handle: string }) {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-[1400px] mx-auto px-4 md:px-8 pt-28 pb-24">
+      <div className="max-w-[1400px] mx-auto px-4 pt-20 pb-14 sm:px-6 md:px-8 md:pt-28 md:pb-24">
         {/* Breadcrumb */}
-        <nav className="mb-8 flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-zinc-400">
+        <nav className="mb-5 flex items-center gap-2 overflow-hidden text-[10px] uppercase tracking-[0.18em] text-zinc-400 md:mb-8 md:text-[11px] md:tracking-[0.2em]">
           <Link href="/" className="hover:text-black transition-colors">
             Home
           </Link>
           <span>/</span>
-          <span className="text-black">{product.title}</span>
+          <span className="truncate text-black">{product.title}</span>
         </nav>
 
         {/* 2-col layout with shared state */}
@@ -41,7 +41,7 @@ export async function ProductDetail({ handle }: { handle: string }) {
 
         {/* Description */}
         {product.description && (
-          <div className="max-w-[1400px] mx-auto mt-8 pt-8 border-t border-zinc-100 lg:pl-[calc(50%+40px)]">
+          <div className="max-w-[1400px] mx-auto mt-7 pt-7 border-t border-zinc-100 md:mt-8 md:pt-8 lg:pl-[calc(50%+40px)]">
             <DescriptionAccordion description={product.description} />
           </div>
         )}

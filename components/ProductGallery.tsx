@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -39,8 +39,14 @@ export function ProductGallery({
   const idx = activeIndex ?? internalIdx;
   const setIdx = onIndexChange ?? setInternalIdx;
 
+  useEffect(() => {
+    if (images.length > 0 && idx >= images.length) {
+      setIdx(0);
+    }
+  }, [images.length, idx, setIdx]);
+
   if (!images.length) {
-    return <div className="aspect-[4/5] bg-zinc-100" />;
+    return <div className="aspect-[3/4] bg-zinc-100 md:aspect-[4/5]" />;
   }
 
   const go = (next: number) => {
@@ -59,7 +65,7 @@ export function ProductGallery({
             <p className="mb-2 px-1 text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-500">
               Colour
             </p>
-            <div className="flex gap-2 overflow-x-auto md:flex-col md:overflow-visible">
+            <div className="-mx-1 flex snap-x gap-2 overflow-x-auto px-1 pb-1 no-scrollbar md:mx-0 md:flex-col md:overflow-visible md:px-0 md:pb-0">
               {colors.map((color) => {
                 const isSelected = selectedColor === color.value;
 
@@ -73,7 +79,7 @@ export function ProductGallery({
                     disabled={!color.available}
                     onClick={() => onColorChange?.(color.value)}
                     className={[
-                      "group relative h-16 w-16 shrink-0 overflow-hidden border bg-[#f5f5f5] transition-all disabled:cursor-not-allowed disabled:opacity-40",
+                      "group relative h-14 w-14 shrink-0 snap-start overflow-hidden border bg-[#f5f5f5] transition-all disabled:cursor-not-allowed disabled:opacity-40 md:h-16 md:w-16",
                       isSelected
                         ? "border-black ring-1 ring-black ring-offset-1"
                         : "border-zinc-200 hover:border-zinc-500",
@@ -102,7 +108,7 @@ export function ProductGallery({
                         {color.value.slice(0, 2)}
                       </span>
                     )}
-                    <span className="absolute inset-x-0 bottom-0 bg-white/90 px-1 py-1 text-[8px] font-bold uppercase tracking-[0.08em] text-black opacity-0 transition-opacity group-hover:opacity-100">
+                    <span className="absolute inset-x-0 bottom-0 hidden bg-white/90 px-1 py-1 text-[8px] font-bold uppercase tracking-[0.08em] text-black opacity-0 transition-opacity group-hover:opacity-100 md:block">
                       {color.value}
                     </span>
                     {!color.available && (
@@ -120,7 +126,7 @@ export function ProductGallery({
 
       <div className="order-1 flex flex-col gap-3 md:order-2">
       {/* ── Main image ── */}
-      <div className="relative aspect-[4/5] bg-[#f5f5f5] overflow-hidden group">
+      <div className="relative aspect-[3/4] bg-[#f5f5f5] overflow-hidden group md:aspect-[4/5]">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={idx}
@@ -148,20 +154,20 @@ export function ProductGallery({
             <button
               onClick={prev}
               aria-label="Previous image"
-              className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white"
+              className="absolute left-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center bg-white/85 backdrop-blur-sm transition-opacity duration-200 hover:bg-white md:left-3 md:h-8 md:w-8 md:opacity-0 md:group-hover:opacity-100"
             >
               <ChevronLeft />
             </button>
             <button
               onClick={next}
               aria-label="Next image"
-              className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-8 h-8 flex items-center justify-center bg-white/80 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-white"
+              className="absolute right-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center bg-white/85 backdrop-blur-sm transition-opacity duration-200 hover:bg-white md:right-3 md:h-8 md:w-8 md:opacity-0 md:group-hover:opacity-100"
             >
               <ChevronRight />
             </button>
 
             {/* Counter */}
-            <span className="absolute bottom-3 right-3 z-10 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/70 tabular-nums">
+            <span className="absolute bottom-3 right-3 z-10 bg-black/35 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white tabular-nums md:bg-transparent md:px-0 md:py-0 md:tracking-[0.2em] md:text-white/70">
               {String(idx + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
             </span>
           </>
@@ -170,13 +176,13 @@ export function ProductGallery({
 
       {/* ── Thumbnails ── */}
       {images.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto no-scrollbar">
+        <div className="-mx-1 flex snap-x gap-2 overflow-x-auto px-1 pb-1 no-scrollbar md:mx-0 md:px-0 md:pb-0">
           {images.map((img, i) => (
             <button
               key={i}
               onClick={() => go(i)}
               className={[
-                "relative shrink-0 w-14 h-[70px] bg-[#f5f5f5] overflow-hidden transition-all duration-200",
+                "relative h-16 w-[52px] shrink-0 snap-start overflow-hidden bg-[#f5f5f5] transition-all duration-200 md:h-[70px] md:w-14",
                 i === idx
                   ? "ring-1 ring-black ring-offset-1"
                   : "opacity-50 hover:opacity-80",
