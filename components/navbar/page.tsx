@@ -26,7 +26,7 @@ const navLinks = [
   { label: "New In",       href: "/collections/new-arrivals" },
   { label: "Collections",  href: "/collections/all" },
   { label: "Essentials",   href: "/collections/essentials" },
-  { label: "Sale",         href: "/collections/all", hot: true },
+  { label: "Sale",         href: "/sales", hot: true },
 ];
 
 export function Navbar() {
