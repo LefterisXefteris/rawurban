@@ -214,6 +214,14 @@ export async function getCollection(
                   url
                   altText
                 }
+                images(first: 100) {
+                  edges {
+                    node {
+                      url
+                      altText
+                    }
+                  }
+                }
                 variants(first: 10) {
                   edges {
                     node {
@@ -278,7 +286,7 @@ export async function getProductByHandle(handle: string): Promise<Product | null
             url
             altText
           }
-          images(first: 10) {
+          images(first: 100) {
             edges {
               node {
                 url

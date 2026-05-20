@@ -11,21 +11,37 @@ type HeroProduct = {
   handle: string;
   priceRange: { minVariantPrice: { amount: string; currencyCode: string } };
   featuredImage: { url: string; altText: string | null } | null;
+  images?: {
+    edges: Array<{
+      node: { url: string; altText: string | null };
+    }>;
+  };
 };
 
 export function Hero({ products = [] }: { products?: HeroProduct[] }) {
   const [idx, setIdx] = useState(0);
   const { scrollY } = useScroll();
   const contentOpacity = useTransform(scrollY, [0, 380], [1, 0]);
+  const slides = products.flatMap((product) => {
+    const images = product.images?.edges.map(({ node }) => node) ?? [];
+    const productImages = images.length
+      ? images
+      : product.featuredImage
+        ? [product.featuredImage]
+        : [];
 
-  // Cycle through products every 5 s
+    return productImages.map((image) => ({ product, image }));
+  });
+
+  // Cycle through hero collection images every 5 s
   useEffect(() => {
-    if (products.length <= 1) return;
-    const t = setInterval(() => setIdx((i) => (i + 1) % products.length), 5000);
+    if (slides.length <= 1) return;
+    const t = setInterval(() => setIdx((i) => (i + 1) % slides.length), 5000);
     return () => clearInterval(t);
-  }, [products.length]);
+  }, [slides.length]);
 
-  const current = products[idx];
+  const current = slides[idx]?.product;
+  const currentImage = slides[idx]?.image;
   const price = current
     ? `£${parseFloat(current.priceRange.minVariantPrice.amount).toFixed(2)}`
     : null;
@@ -38,7 +54,7 @@ export function Hero({ products = [] }: { products?: HeroProduct[] }) {
       ═══════════════════════════════════════ */}
       <div className="absolute inset-0 lg:relative lg:order-2 lg:w-[58%] lg:shrink-0 overflow-hidden">
         <AnimatePresence mode="wait">
-          {current?.featuredImage ? (
+          {current && currentImage ? (
             <m.div
               key={idx}
               initial={{ opacity: 0, scale: 1.06 }}
@@ -51,8 +67,8 @@ export function Hero({ products = [] }: { products?: HeroProduct[] }) {
               className="absolute inset-0"
             >
               <Image
-                src={current.featuredImage.url}
-                alt={current.featuredImage.altText || current.title}
+                src={currentImage.url}
+                alt={currentImage.altText || current.title}
                 fill
                 className="object-cover object-center"
                 priority={idx === 0}
@@ -80,7 +96,7 @@ export function Hero({ products = [] }: { products?: HeroProduct[] }) {
             className="absolute bottom-10 left-8 z-20 hidden lg:block"
           >
             <p className="text-white/40 text-[9px] uppercase tracking-[0.35em] mb-1">
-              {idx + 1} / {products.length}
+              {idx + 1} / {slides.length}
             </p>
             <p className="text-white/80 text-[12px] font-medium uppercase tracking-[0.18em]">
               {current?.title}
@@ -92,9 +108,9 @@ export function Hero({ products = [] }: { products?: HeroProduct[] }) {
         </AnimatePresence>
 
         {/* ── Dot / pill indicators ── */}
-        {products.length > 1 && (
+        {slides.length > 1 && (
           <div className="absolute bottom-10 right-8 flex gap-2 z-20 hidden lg:flex">
-            {products.map((_, i) => (
+            {slides.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setIdx(i)}

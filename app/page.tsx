@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/navbar/page";
-import { getProducts } from "@/lib/index";
+import { getCollection, getProducts } from "@/lib/index";
 import { Hero } from "@/components/hero";
 import { ProductCard } from "@/components/cards/ProductCard";
 import { NewsletterSignup } from "@/components/footer/NewsletterSignup";
@@ -7,9 +7,14 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default async function Home() {
-  const products = await getProducts(20);
-  // First 4 products cycle in the hero; first 2 back the editorial tiles
-  const heroProducts = products.slice(0, 4);
+  const [products, heroCollection] = await Promise.all([
+    getProducts(20),
+    getCollection("hero"),
+  ]);
+  // Shopify collection `hero` controls the hero; fall back to newest products.
+  const heroProducts = heroCollection?.products.length
+    ? heroCollection.products
+    : products.slice(0, 4);
   const tile1 = products[0];
   const tile2 = products[1] ?? products[0];
 
